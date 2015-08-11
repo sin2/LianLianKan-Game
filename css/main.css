@@ -64,8 +64,9 @@ body {
 .gameArea {
     width:500px;
     height:500px;
-    background:#000;
-    margin:30px auto 0;
+    background:blue;
+    margin: 30px auto;
+    position: relative;
 }
 
 .tile{
@@ -75,17 +76,6 @@ body {
     border: 1px solid black;
     position: absolute;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /* ==========================================================================
    Media Queries

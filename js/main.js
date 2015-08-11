@@ -1,16 +1,13 @@
 (function () {
     var gameArea = document.createElement('div');
-    
-
         
     document.body.appendChild(gameArea);
     gameArea.classList.add('gameArea');
 
-
-    
     var gameSize = 10;
     var tileSize = 500/gameSize;
     var tiles = new Array(gameSize);
+    var selectedTiles = [];
     
     var TileType = {
         EMPTY: 0
@@ -25,15 +22,18 @@
                 
                 // Create and place tile
                 var tile = document.createElement('div');
-                tile.tileType = TileType.EMPTY;
+                Util.resetTile(tile);
+                
+//                tile.addEventListener('click', gameArea.tileClicked);
+                $(tile).click(gameArea.tileClicked);
                 
                 tile.style.width = tileSize + 'px';
                 tile.style.height = tileSize + 'px';
                 
-                tile.style.left = (gameArea.offsetLeft + tileSize * x) + 'px';
-                tile.style.top = (gameArea.offsetTop + tileSize * y) + 'px';
+                tile.style.left = ( tileSize * x) + 'px';
+                tile.style.top = (tileSize * y) + 'px';
                 
-                document.body.appendChild(tile);
+                gameArea.appendChild(tile);
                 tile.classList.add('tile');
                 column[y] = tile;
             }
@@ -48,18 +48,80 @@
         var startX = gameSize/2 - width/2;
         var startY = gameSize/2 - height/2;
         
-        var numTypes = (width * height) * 2;
+        var numPairs = (width * height) / 2;
+        var typeArray = gameArea.createTypeArray(numPairs);
         
         for (x = startX; x < startX+width; x++){
             for(y = startY; y < startY+height; y++){
-                tiles[x][y].style.background = 'red';
+                
+                // type is an array [int,colour]
+                var type = typeArray.pop();
+                
+                tiles[x][y].tileType = type[0];
+                tiles[x][y].style.background = type[1];
             }
         }
 
     };
     
+    gameArea.createTypeArray = function (numPairs) {
+        
+        var types = [];
+        
+        // Start at 1 becuase 0 means empty tile
+        for (x = 1; x <= numPairs; x++) {
+            
+            var colour = Colours.random();
+            var tileType = x;
+            
+            $.each(types,function(index,value){
+                if(colour == value[1]){
+                    tileType = value[0];
+                    console.log('Duplicate colour');
+                }
+            });
+            
+            var item = [tileType, colour];
+            types.push(item,item);
+        }
+        return Util.arrayShuffle(types);
+    };
+    
+    gameArea.tileClicked = function (event){
+        
+        var clickedTile = event.currentTarget;
+        
+        // Tile is not empty tile
+        if(clickedTile.tileType != TileType.EMPTY){
+            selectedTiles.push(clickedTile);
+        }
+        
+        if(selectedTiles.length == 2){
+            
+            // Tiles are the same
+            if (selectedTiles[0] == selectedTiles[1]){
+
+            }
+            
+            // Tiles are the same type
+            else if (selectedTiles[0].tileType == selectedTiles[1].tileType){
+                // Confirm valid match
+                Util.resetTile(selectedTiles[0]);
+                Util.resetTile(selectedTiles[1]);
+            }
+            
+            // Reset Selection
+            selectedTiles = [];
+        }
+        
+        else if(selectedTiles.length > 2){
+            selectedTiles = [];
+        }
+        
+    };
+    
+    
     gameArea.createNewTiles();
     gameArea.setGameTiles(6, 6);
-    console.log(tiles);
     
 })();
