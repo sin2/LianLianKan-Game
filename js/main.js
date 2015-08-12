@@ -172,11 +172,25 @@
                 neighbours = Tile.neighbours(tiles[currentNode.x][currentNode.y], tiles, start.tileType);
                 
                 for(i = 0, j = neighbours.length; i < j; i++){
+                    
+                    var gCost = 1;
+                    var currParent = currentNode.Parent;
+                    var originalDirection = ((currParent) ? Util.adjacentDirection(currParent.x,currParent.y,currentNode.x,currentNode.y) : null);
+                    
 					pathNode = Node(currentNode, neighbours[i]);
 					if (!AStar[pathNode.x][pathNode.y]){
-						// estimated cost of this particular route so far
-						pathNode.g = currentNode.g + Util.manhattanDistance(neighbours[i].x,neighbours[i].y, currentNode.x,currentNode.y);
-						// estimated cost of entire guessed route to the destination
+                        
+                        var newDirection = Util.adjacentDirection(currentNode.x,currentNode.y,neighbours[i].x,neighbours[i].y);
+                        
+                        if(originalDirection && originalDirection != newDirection){
+                            // Add a cost to change direction
+                            gCost = 20;
+                        }
+                        
+						// estimated cost of this particular route so far (g)                        
+//						pathNode.g = currentNode.g + Util.manhattanDistance(neighbours[i].x,neighbours[i].y, currentNode.x,currentNode.y);
+                        pathNode.g = currentNode.g + gCost;
+						// estimated cost of entire guessed route to the destination (h)
 						pathNode.f = pathNode.g + Util.manhattanDistance(neighbours[i].x,neighbours[i].y, endNode.x, endNode.y);
 						// remember this new path for testing above
 						open.push(pathNode);

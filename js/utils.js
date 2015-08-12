@@ -1,5 +1,12 @@
 function Util() {}
 
+Util.direction = {
+    NORTH: 0,
+    EAST: 1,
+    SOUTH: 2,
+    WEST: 3
+};
+
 Util.arrayShuffle = function (array) {
     
     var shuffled = [];
@@ -25,6 +32,14 @@ Util.manhattanDistance = function (x1,y1,x2,y2) {
     return Math.abs(x2-x1) + Math.abs(y2-y1);
 };
 
+// Returns the side an adjacent tile is located
+Util.adjacentDirection = function(x1,y1,x2,y2) {
+    if(y1<y2) return Util.direction.NORTH;
+    if(x1<x2) return Util.direction.EAST;
+    if(y1>y2) return Util.direction.SOUTH;
+    if(x1>x2) return Util.direction.WEST;
+};
+
 
 function Node(Parent, Point)
 {
@@ -44,7 +59,7 @@ function Node(Parent, Point)
     };
 
     return newNode;
-}
+};
 
 Util.initialize2dArray = function (x,y) {
     var twoDArr = [];
