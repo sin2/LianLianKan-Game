@@ -9,10 +9,6 @@
     var tiles = new Array(gameSize);
     var selectedTiles = [];
     
-    var TileType = {
-        EMPTY: 0
-    };
-    
     gameArea.createNewTiles = function () {        
         for (x = 0; x < gameSize; x++){
             
@@ -21,10 +17,8 @@
             for (y = 0; y < gameSize; y++) {
                 
                 // Create and place tile
-                var tile = document.createElement('div');
-                Util.resetTile(tile);
+                var tile = Tile.create(x,y);
                 
-//                tile.addEventListener('click', gameArea.tileClicked);
                 $(tile).click(gameArea.tileClicked);
                 
                 tile.style.width = tileSize + 'px';
@@ -106,8 +100,13 @@
             // Tiles are the same type
             else if (selectedTiles[0].tileType == selectedTiles[1].tileType){
                 // Confirm valid match
-                Util.resetTile(selectedTiles[0]);
-                Util.resetTile(selectedTiles[1]);
+
+                var result = gameArea.searchPath(selectedTiles[0],selectedTiles[1]);
+
+                if (result.length){
+                    Tile.reset(selectedTiles[0]);
+                    Tile.reset(selectedTiles[1]);
+                }
             }
             
             // Reset Selection
@@ -119,6 +118,67 @@
         }
         
     };
+    
+    // Start and End are tiles
+    gameArea.searchPath = function (start,end){
+        var startNode = Node(null, {x:start.x,y:start.y});
+        var endNode = Node(null, {x:end.x, y:end.y});
+        
+        var AStar = Util.initialize2dArray(gameSize,gameSize);
+        
+        var open = [startNode];
+        var closed = [];
+        var result = [];
+        var neighbours;
+        var currentNode;
+        var pathNode;
+        var length,max,min,i,j;
+        
+        // Go through open list
+        while(length = open.length){
+            max = gameSize * gameSize;
+            min = -1;
+            for(i = 0; i < length; i++){
+				if(open[i].f < max){
+					max = open[i].f;
+					min = i;
+				}
+			}
+            currentNode = open.splice(min,1)[0];
+            
+            // Current node is end node
+            if(currentNode.x == endNode.x && currentNode.y == endNode.y){
+                pathNode = closed[closed.push(currentNode) -1];
+                do{
+                    result.push([pathNode.x, pathNode.y]);
+                } while (pathNode = pathNode.Parent);
+                
+                closed = open = [];
+                AStar = Util.initialize2dArray(gameSize,gameSize);
+                result.reverse();
+            }
+            // Current node is not the end node
+            else{
+                neighbours = Tile.neighbours(tiles[currentNode.x][currentNode.y], tiles, start.tileType);
+                
+                for(i = 0, j = neighbours.length; i < j; i++){
+					pathNode = Node(currentNode, neighbours[i]);
+					if (!AStar[pathNode.x][pathNode.y]){
+						// estimated cost of this particular route so far
+						pathNode.g = currentNode.g + Util.manhattanDistance(neighbours[i].x,neighbours[i].y, currentNode.x,currentNode.y);
+						// estimated cost of entire guessed route to the destination
+						pathNode.f = pathNode.g + Util.manhattanDistance(neighbours[i].x,neighbours[i].y, endNode.x, endNode.y);
+						// remember this new path for testing above
+						open.push(pathNode);
+						// mark this node in the world graph as visited
+						AStar[pathNode.x][pathNode.y] = true;
+					}
+				}
+                closed.push(currentNode);
+            }
+        }
+        return result;
+    }
     
     
     gameArea.createNewTiles();
