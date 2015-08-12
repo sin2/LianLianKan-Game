@@ -102,6 +102,16 @@
                 // Confirm valid match
 
                 var result = gameArea.searchPath(selectedTiles[0],selectedTiles[1]);
+                $.each(result,function(index, value){
+                    var blinkTile = tiles[value[0]][value[1]];
+                    $(blinkTile).addClass('blinkRed');
+                    
+                    $(blinkTile).bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function (e) {               
+                        $(blinkTile).removeClass('blinkRed'); 
+                    });
+                    
+
+                });
 
                 if (result.length){
                     Tile.reset(selectedTiles[0]);

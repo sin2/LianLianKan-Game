@@ -77,6 +77,42 @@ body {
     position: absolute;
 }
 
+.blinkRed
+{
+    -webkit-animation-name: blink;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    
+    -moz-animation-name: blink;
+    -moz-animation-duration: 1s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease;
+}
+
+@-webkit-keyframes blink {
+    0% {
+        background-color: grey;
+    }
+    50% {
+        background-color: red;
+    }
+    100% {
+        background-color: grey;
+    }
+}
+@-moz-keyframes blink {
+    0% {
+        background-color: grey;
+    }
+    50% {
+        background-color: red;
+    }
+    100% {
+        background-color: grey;
+    }
+}
+
 /* ==========================================================================
    Media Queries
    ========================================================================== */
