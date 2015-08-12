@@ -19,6 +19,7 @@ Tile.reset = function (tile) {
     tile.style.background = 'grey';
 };
 
+// Using selectedTileType can be problematic if there is a cluster of similar tiles
 Tile.neighbours = function (tile,tiles,selectedTileType){
     var maxSize = tiles.length;
     
@@ -46,4 +47,15 @@ Tile.neighbours = function (tile,tiles,selectedTileType){
         neighbours.push({x:W.x, y:W.y});
     }
     return neighbours;
+};
+
+Tile.tilesEmpty = function (tiles){
+    for(x = 0; x < tiles.length; x++){
+        for(y = 0; y < tiles.length; y++){
+            if(tiles[x][y].tileType != TileType.EMPTY){
+                return false;
+            }
+        }
+    }
+    return true;
 };

@@ -61,12 +61,21 @@ body {
     padding:0;
     background:#000;
 }
-.gameArea {
+#gameArea {
     width:500px;
     height:500px;
     background:blue;
     margin: 30px auto;
     position: relative;
+}
+
+#buttonContainer {
+    width:500px;
+    height:65px;
+    background:blue;
+    margin: 30px auto;
+    position: relative;
+    background: pink;
 }
 
 .tile{
@@ -77,40 +86,11 @@ body {
     position: absolute;
 }
 
-.blinkRed
-{
-    -webkit-animation-name: blink;
-    -webkit-animation-duration: 0.5s;
-    -webkit-animation-iteration-count: 1;
-    -webkit-animation-timing-function: ease;
-    
-    -moz-animation-name: blink;
-    -moz-animation-duration: 0.5s;
-    -moz-animation-iteration-count: 1;
-    -moz-animation-timing-function: ease;
-}
-
-@-webkit-keyframes blink {
-    0% {
-        background-color: grey;
-    }
-    50% {
-        background-color: red;
-    }
-    100% {
-        background-color: grey;
-    }
-}
-@-moz-keyframes blink {
-    0% {
-        background-color: grey;
-    }
-    50% {
-        background-color: red;
-    }
-    100% {
-        background-color: grey;
-    }
+.hintButton{
+    width:250px;
+    height:30px;
+    margin: 0 auto;
+    position: relative;
 }
 
 /* ==========================================================================

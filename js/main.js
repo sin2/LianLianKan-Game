@@ -1,13 +1,32 @@
 (function () {
-    var gameArea = document.createElement('div');
+    var gameArea = $('#gameArea'); //document.createElement('div');
         
-    document.body.appendChild(gameArea);
-    gameArea.classList.add('gameArea');
+//    document.body.appendChild(gameArea);
+//    gameArea.classList.add('gameArea');
 
     var gameSize = 10;
     var tileSize = 500/gameSize;
     var tiles = new Array(gameSize);
     var selectedTiles = [];
+    
+    // Ranges where tiles are in play, contains 2 ranges for x and y axis
+    var playAreaRange = [];
+    
+    var hint; // Array containing coordinate path
+    var hintButton;
+    
+    gameArea.setUp = function (){
+        gameArea.createNewTiles();
+        
+        hintButton = document.createElement('input');
+        hintButton.type = 'button';
+        hintButton.value = 'Hint';
+        hintButton.onclick = gameArea.showHint;
+        hintButton.classList.add('hintButton');
+                
+        $('#buttonContainer').append(hintButton);
+        
+    };
     
     gameArea.createNewTiles = function () {        
         for (x = 0; x < gameSize; x++){
@@ -27,7 +46,7 @@
                 tile.style.left = ( tileSize * x) + 'px';
                 tile.style.top = (tileSize * y) + 'px';
                 
-                gameArea.appendChild(tile);
+                gameArea.append(tile);
                 tile.classList.add('tile');
                 column[y] = tile;
             }
@@ -42,6 +61,8 @@
         var startX = gameSize/2 - width/2;
         var startY = gameSize/2 - height/2;
         
+        playAreaRange = [[startX,startX+width],[startY,startY+height]];
+        
         var numPairs = (width * height) / 2;
         var typeArray = gameArea.createTypeArray(numPairs);
         
@@ -55,7 +76,15 @@
                 tiles[x][y].style.background = type[1];
             }
         }
-
+        
+        //Calculate hint when starting game
+        hint = gameArea.checkForSolution();
+        if(!hint){
+            console.log('No more solutions!');
+            if(Tile.tilesEmpty(tiles)){
+                gameArea.gameOver();
+            }
+        }
     };
     
     gameArea.createTypeArray = function (numPairs) {
@@ -71,7 +100,6 @@
             $.each(types,function(index,value){
                 if(colour == value[1]){
                     tileType = value[0];
-                    console.log('Duplicate colour');
                 }
             });
             
@@ -116,6 +144,15 @@
                 if (result.length){
                     Tile.reset(selectedTiles[0]);
                     Tile.reset(selectedTiles[1]);
+                    
+                    // Calculate new hint
+                    hint = gameArea.checkForSolution();
+                    if(!hint){
+                        console.log('No more solutions!');
+                        if(Tile.tilesEmpty(tiles)){
+                            gameArea.gameOver();
+                        }           
+                    }
                 }
             }
             
@@ -190,7 +227,7 @@
                         
                         if(originalDirection && originalDirection != newDirection){
                             // Add a cost to change direction
-                            gCost = 25;
+                            gCost = 30;
                         }
                         
 						// estimated cost of this particular route so far (g)                        
@@ -210,8 +247,73 @@
         return result;
     }
     
+    // Checks if a solution exists and stores first solution
+    gameArea.checkForSolution = function(){
+        var typesChecked = [];
+        var solution = null;
+        
+        var xRange = playAreaRange[0];
+        var yRange = playAreaRange[1];
+        
+        for(x = xRange[0];x < xRange[1]; x++){
+            for(y = yRange[0]; y < yRange[1]; y++){
+//                console.log('Tiletype index: '+typeCheckedAlready);
+                if(tiles[x][y].tileType != TileType.EMPTY ){//&& $.inArray(tiles[x][y].tileType,typesChecked) == -1){
+//                    console.log('Checking tile at :'+x+' ' + y);
+                    typesChecked.push(tiles[x][y].tileType);
+                    // Check this tile against matching tiles for solution
+                    solution = gameArea.checkForSolutionWithTile(tiles[x][y]);
+                    if (solution){
+                        return solution;
+                    }
+                }
+            }
+        }
+        return null;
+    };
     
-    gameArea.createNewTiles();
+    gameArea.checkForSolutionWithTile = function(tile){
+        var solution = null;
+        
+        var xRange = playAreaRange[0];
+        var yRange = playAreaRange[1];
+        
+        for(m = xRange[0];m < xRange[1]; m++){
+            for(n = yRange[0]; n < yRange[1]; n++){
+                if(tiles[m][n].tileType == tile.tileType && (tile.x != m || tile.y != n)){
+                    solution = gameArea.searchPath(tiles[m][n],tile);
+                    if (solution.length > 0){
+                        return solution;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    };
+    
+    gameArea.showHint = function(){
+        if(hint){
+            $.each(hint,function(index, value){
+                var blinkTile = tiles[value[0]][value[1]];
+                $(blinkTile).addClass('blinkGreen');
+
+                $(blinkTile).bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function (e) {               
+                    $(blinkTile).removeClass('blinkGreen'); 
+                });
+            });
+        }
+    };
+    
+    gameArea.gameOver = function(){
+        
+        // Show score
+        
+        // Start new game
+        gameArea.setGameTiles(6,6);
+    }
+            
+    gameArea.setUp();
     gameArea.setGameTiles(6, 6);
     
 })();
