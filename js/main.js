@@ -165,7 +165,13 @@
                 
                 closed = open = [];
                 AStar = Util.initialize2dArray(gameSize,gameSize);
-                result.reverse();
+                result.reverse(); // I don't think this is needed
+                
+                // If path contains >2 bends then don't return a path
+                if(Util.numberOfBends(result) > 2){
+                    console.log('Too many turns!');
+                    return [];
+                }
             }
             // Current node is not the end node
             else{
@@ -184,7 +190,7 @@
                         
                         if(originalDirection && originalDirection != newDirection){
                             // Add a cost to change direction
-                            gCost = 20;
+                            gCost = 25;
                         }
                         
 						// estimated cost of this particular route so far (g)                        

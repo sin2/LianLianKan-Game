@@ -41,6 +41,28 @@ Util.adjacentDirection = function(x1,y1,x2,y2) {
 };
 
 
+//Given an array of tuples containing x,y positions
+//calculates number of turns taken during the path
+Util.numberOfBends = function (arr){
+    var direction = -1;
+    var numberOfBends = 0;
+    
+    for(i = 0; i<arr.length; i++){
+        if (i > 0){
+            var newDirection = Util.adjacentDirection(arr[i-1][0],arr[i-1][1],arr[i][0],arr[i][1]);
+            if(newDirection != direction){
+                direction = newDirection;
+                
+                // Don't count first direction as a direction change
+                if(i != 1){
+                    numberOfBends++;
+                }
+            }
+        }
+    }
+    return numberOfBends;
+};
+
 function Node(Parent, Point)
 {
     var newNode = {
