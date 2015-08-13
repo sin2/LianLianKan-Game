@@ -90,10 +90,8 @@
     -moz-animation-timing-function: linear;
 }
 @-webkit-keyframes countDown {
-/*   0% { width: 100%; }*/
    100% { width: 0%; }
 }
 @-moz-keyframes countDown {
-/*   0% { width: 100%; }*/
    100% { width: 0%; }
 }
