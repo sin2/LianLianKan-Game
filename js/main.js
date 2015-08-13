@@ -52,7 +52,7 @@
                 
         $(progressBarContainer).append(progressBar);
         
-        maxTime = 150;
+        maxTime = 60;
     };
     
     gameArea.createNewTiles = function () {        
@@ -194,6 +194,7 @@
     };
     
     // Start and End are tiles
+    // Based off http://buildnewgames.com/astar/
     gameArea.searchPath = function (start,end){
         var startNode = Node(null, {x:start.x,y:start.y});
         var endNode = Node(null, {x:end.x, y:end.y});
@@ -343,6 +344,8 @@
     
     gameArea.gameOver = function(){
         clearInterval(timer);
+        $(progressBar).removeClass('countDown'); 
+        progressBar.offSetWidth = progressBar.offsetWidth;
         // Show score
         
         // Start new game
@@ -350,19 +353,31 @@
     }
     
     gameArea.activateTimePower = function(){
-        timeLeft = Math.min(timeLeft + 10, maxTime);
+        timeLeft = Math.min(timeLeft+10, maxTime);
+        $(progressBar).removeClass('countDown'); 
+        
+        // https://css-tricks.com/restart-css-animation/
+        progressBar.offSetWidth = progressBar.offsetWidth;
+        
+        progressBar.style.width = ((timeLeft / maxTime) * 100) + '%';
+        
+        $(progressBar).addClass('countDown');
+        progressBar.style.animationDuration = timeLeft + 's';
     };
     
     gameArea.startTimer = function(){
         timeLeft = maxTime;
+        
+        progressBar.style.width = '100%';
+        $(progressBar).addClass('countDown');
+        progressBar.style.animationDuration = timeLeft + 's';
+        
+        $(progressBar).bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function (e) {               
+            gameArea.gameOver();
+        });
+
         timer = setInterval(function(){
             timeLeft--;
-            //Update progress bar
-            progressBar.style.width = ((timeLeft / maxTime) * 100) + '%';
-            
-            if(timeLeft <= 0){
-                gameArea.gameOver();
-            }
         },1000);
     };
             

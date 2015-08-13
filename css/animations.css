@@ -48,3 +48,25 @@
     }
 
 }
+
+/* Progress bars */
+.countDown
+{
+    -webkit-animation-name: countDown;
+    -webkit-animation-duration: 150s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: linear;
+    
+    -moz-animation-name: countDown;
+    -moz-animation-duration: 150s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: linear;
+}
+@-webkit-keyframes countDown {
+/*   0% { width: 100%; }*/
+   100% { width: 0%; }
+}
+@-moz-keyframes countDown {
+/*   0% { width: 100%; }*/
+   100% { width: 0%; }
+}
