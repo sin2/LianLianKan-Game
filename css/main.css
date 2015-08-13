@@ -59,59 +59,93 @@ textarea {
 body {
     margin:0;
     padding:0;
-    background:#000;
+    background:#fff;
 }
 #gameArea {
     width:500px;
     height:500px;
-    background:blue;
     margin: 30px auto;
     position: relative;
+    border: 5px solid black;
+    -moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
 }
 
 #buttonContainer {
     width:500px;
-    height:65px;
-    margin: 30px auto;
+    height:75px;
+    margin: 0px auto;
     position: relative;
 }
 
 .tile{
     width: 10%;
     height: 10%;
-    background: grey;
-    border: 1px solid black;
+/*    background: white;*/
     position: absolute;
+    background-image: url(../img/path.png);
+    -moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
+
 }
 
-.hintButton{
-    width:50%;
-    height:30px;
-    margin: 0 auto;
+.hintButton, .timePowerButton {
+    width:48%;
+    height:40px;
+    margin : 5px 5px 5px 5px;
     position: relative;
-}
+	background-color:#ffffff;
+	-moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
+	border:5px solid #000000;
+	display:inline-block;
+	cursor:pointer;
+	color:black;
+	font-family:Arial;
+/*
+	font-size:17px;
+	padding:16px 31px;
+*/
+	text-decoration:none;
 
-.timePowerButton{
-    width:50%;
-    height:30px;
-    margin: 0 auto;
-    position: relative;
+}
+.hintButton:hover, .timePowerButton:hover {
+	background-color:#000;
+    color: white;
+}
+.hintButton:active, .timePowerButton:active {
+	position:relative;
+	top:1px;
 }
 
 .progressBarContainer{
-    width:100%;
+    width:98%;
     height:30px;
-    margin: 5px auto;
     position: relative;
-    background: white;
+	background-color:#1c1c1c;
+	-moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+    padding: 5px
 }
 
 .progressBar{
     width:100%;
-    height:30px;
-    margin: 0 auto;
-    position: absolute;
-    background: red;
+    height:100%;
+    position: relative;
+	background-color:#fff;
+	-moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
 }
 
 /* ==========================================================================

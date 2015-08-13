@@ -3,12 +3,12 @@
 .blinkRed
 {
     -webkit-animation-name: blinkRed;
-    -webkit-animation-duration: 0.5s;
+    -webkit-animation-duration: 1s;
     -webkit-animation-iteration-count: 1;
     -webkit-animation-timing-function: ease;
     
     -moz-animation-name: blinkRed;
-    -moz-animation-duration: 0.5s;
+    -moz-animation-duration: 1s;
     -moz-animation-iteration-count: 1;
     -moz-animation-timing-function: ease;
 }
@@ -16,23 +16,25 @@
 @-webkit-keyframes blinkRed {
     50% {
         background-color: red;
+        transform: scale(0.25)
     }
 }
 @-moz-keyframes blinkRed {
     50% {
         background-color: red;
+        transform: scale(0.25)
     }
 }
 
 .blinkGreen
 {
     -webkit-animation-name: blinkGreen;
-    -webkit-animation-duration: 0.5s;
+    -webkit-animation-duration: 1s;
     -webkit-animation-iteration-count: 1;
     -webkit-animation-timing-function: ease;
     
     -moz-animation-name: blinkGreen;
-    -moz-animation-duration: 0.5s;
+    -moz-animation-duration: 1s;
     -moz-animation-iteration-count: 1;
     -moz-animation-timing-function: ease;
 }
@@ -45,6 +47,31 @@
 @-moz-keyframes blinkGreen {
     50% {
         background-color: limegreen;
+    }
+
+}
+
+.blinkYellow
+{
+    -webkit-animation-name: blinkYellow;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease;
+    
+    -moz-animation-name: blinkYellow;
+    -moz-animation-duration: 0.5s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: ease;
+}
+
+@-webkit-keyframes blinkYellow {
+    50% {
+        background-color: gold;
+    }
+}
+@-moz-keyframes blinkYellow {
+    50% {
+        background-color: gold;
     }
 
 }

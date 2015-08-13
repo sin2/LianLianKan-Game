@@ -100,7 +100,10 @@
                 var type = typeArray.pop();
                 
                 tiles[x][y].tileType = type[0];
-                tiles[x][y].style.background = type[1];
+//                tiles[x][y].style.background = type[1];
+                tiles[x][y].style.backgroundImage = type[1];
+//                tiles[x][y].style.border = '1px inset #000000';
+
             }
         }
         
@@ -119,16 +122,16 @@
         // Start at 1 becuase 0 means empty tile
         for (x = 1; x <= numPairs; x++) {
             
-            var colour = Colours.random();
+            var tileImage = Tile.randomTileImage();
             var tileType = x;
             
             $.each(types,function(index,value){
-                if(colour == value[1]){
+                if(tileImage == value[1]){
                     tileType = value[0];
                 }
             });
             
-            var item = [tileType, colour];
+            var item = [tileType, tileImage];
             types.push(item,item);
         }
         return Util.arrayShuffle(types);
@@ -141,6 +144,7 @@
         // Tile is not empty tile
         if(clickedTile.tileType != TileType.EMPTY){
             selectedTiles.push(clickedTile);
+            $(clickedTile).addClass('blinkYellow');
         }
         
         if(selectedTiles.length == 2){
@@ -157,13 +161,7 @@
                 var result = gameArea.searchPath(selectedTiles[0],selectedTiles[1]);
                 $.each(result,function(index, value){
                     var blinkTile = tiles[value[0]][value[1]];
-                    $(blinkTile).addClass('blinkRed');
-                    
-                    $(blinkTile).bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function (e) {               
-                        $(blinkTile).removeClass('blinkRed'); 
-                    });
-                    
-
+                    Tile.blinkRed(blinkTile);
                 });
 
                 if (result.length){
@@ -184,10 +182,18 @@
             }
             
             // Reset Selection
+           $.each(selectedTiles,function(index, value){
+                    var blinkTile = value;
+                    $(blinkTile).removeClass('blinkYellow');
+            });
             selectedTiles = [];
         }
         
         else if(selectedTiles.length > 2){
+            $.each(selectedTiles,function(index, value){
+                    var blinkTile = value;
+                    $(blinkTile).removeClass('blinkYellow');
+            });
             selectedTiles = [];
         }
         
@@ -234,7 +240,6 @@
                 
                 // If path contains >2 bends then don't return a path
                 if(Util.numberOfBends(result) > 2){
-                    console.log('Too many turns!');
                     return [];
                 }
             }
@@ -331,14 +336,10 @@
     
     gameArea.showHint = function(){
         if(hint){
-            $.each(hint,function(index, value){
-                var blinkTile = tiles[value[0]][value[1]];
-                $(blinkTile).addClass('blinkGreen');
-
-                $(blinkTile).bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function (e) {               
-                    $(blinkTile).removeClass('blinkGreen'); 
-                });
-            });
+            var firstTile = tiles[hint[0][0]][hint[0][1]];
+            var lastTile = tiles[hint[hint.length-1][0]][hint[hint.length-1][1]];
+            Tile.blinkGreen(firstTile);
+            Tile.blinkGreen(lastTile);
         }
     };
     
@@ -347,10 +348,10 @@
         $(progressBar).removeClass('countDown'); 
         progressBar.offSetWidth = progressBar.offsetWidth;
         // Show score
-        
+        alert ("Game over!");
         // Start new game
         gameArea.setGameTiles(6,6);
-    }
+    };
     
     gameArea.activateTimePower = function(){
         timeLeft = Math.min(timeLeft+10, maxTime);
@@ -380,7 +381,7 @@
             timeLeft--;
         },1000);
     };
-            
+    
     gameArea.setUp();
     gameArea.setGameTiles(6, 6);
     

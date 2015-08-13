@@ -1,7 +1,8 @@
 function Tile () {}
 
 var TileType = {
-    EMPTY: 0
+    EMPTY: 0,
+    MAX: 14
 };
 
 Tile.create = function (x,y){
@@ -9,14 +10,14 @@ Tile.create = function (x,y){
     tile.x = x;
     tile.y = y;
     tile.tileType = TileType.EMPTY;
-    tile.style.background = 'grey';
+//    tile.style.background = 'white';
     
     return tile;
 };
 
 Tile.reset = function (tile) {
     tile.tileType = TileType.EMPTY;
-    tile.style.background = 'grey';
+    tile.style.backgroundImage = "url('./img/path.png')";
 };
 
 // Using selectedTileType can be problematic if there is a cluster of similar tiles
@@ -79,7 +80,7 @@ Tile.shuffleGameTiles = function (tiles){
         var tile = gameTiles[z];
         
         tile.tileType = shuffledTypes[z][0];
-        tile.style.background = shuffledTypes[z][1];
+        tile.style.backgroundImage = shuffledTypes[z][1];
     }
 };
 
@@ -87,8 +88,30 @@ Tile.shuffleGameTiles = function (tiles){
 Tile.typeArrayWithTileArray = function (tiles){
     var types = [];
     for(i = 0; i < tiles.length; i++){
-        types.push([tiles[i].tileType, tiles[i].style.background]);
+        types.push([tiles[i].tileType, tiles[i].style.backgroundImage]);
     }
     return types;
+};
+
+Tile.randomTileImage = function() {
+//    return 'tile_' + Math.floor(Math.random() * TileType.MAX) + '.png';
+    var index = Math.floor(Math.random() * TileType.MAX);
+    return 'url(./img/tile_' + index + '.png)';
+};
+
+Tile.blinkGreen = function (blinkTile){
+    $(blinkTile).addClass('blinkGreen');
+
+    $(blinkTile).bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function (e) {               
+        $(blinkTile).removeClass('blinkGreen'); 
+    });
+};
+
+Tile.blinkRed = function (blinkTile){
+    $(blinkTile).addClass('blinkRed');
+
+    $(blinkTile).bind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function (e) {               
+        $(blinkTile).removeClass('blinkRed'); 
+    });
 };
 
