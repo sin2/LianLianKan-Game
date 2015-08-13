@@ -18,10 +18,12 @@
     var timePowerButton;
     
     var timeLeft;
-    var maxTime;
+    var maxTime = 60;
     var timer;
     
     var progressBar;
+    
+    var score = 0;
     
     gameArea.setUp = function (){
         gameArea.createNewTiles();
@@ -52,7 +54,6 @@
                 
         $(progressBarContainer).append(progressBar);
         
-        maxTime = 60;
     };
     
     gameArea.createNewTiles = function () {        
@@ -165,6 +166,7 @@
                 });
 
                 if (result.length){
+                    score += 20;
                     Tile.reset(selectedTiles[0]);
                     Tile.reset(selectedTiles[1]);
                     
@@ -173,7 +175,8 @@
                     if(!hint){
                         console.log('No more solutions!');
                         if(Tile.tilesEmpty(tiles)){
-                            gameArea.gameOver();
+                            maxTime *= 0.8;
+                            gameArea.newGame();
                         } else {
                             gameArea.shuffleGame();
                         }          
@@ -344,17 +347,21 @@
     };
     
     gameArea.gameOver = function(){
-        clearInterval(timer);
-        $(progressBar).removeClass('countDown'); 
-        progressBar.offSetWidth = progressBar.offsetWidth;
-        // Show score
-        alert ("Game over!");
-        // Start new game
-        gameArea.setGameTiles(6,6);
+        gameArea.stopTimer();
+        if (window.confirm('Game Over! \n Score '+ score +' \n Play again?')){
+            score = 0;
+            maxTime = 60;
+            // Start new game
+            gameArea.newGame();
+        }
+        else{
+            
+        }
+
     };
     
     gameArea.activateTimePower = function(){
-        timeLeft = Math.min(timeLeft+10, maxTime);
+        timeLeft = Math.min(timeLeft+ maxTime*0.25, maxTime);
         $(progressBar).removeClass('countDown'); 
         
         // https://css-tricks.com/restart-css-animation/
@@ -379,10 +386,24 @@
 
         timer = setInterval(function(){
             timeLeft--;
+//            if(timeLeft < 0){gameArea.gameOver()}
         },1000);
     };
     
+    gameArea.stopTimer = function (){
+        clearInterval(timer);
+        $(progressBar).unbind('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd');
+        $(progressBar).removeClass('countDown'); 
+        progressBar.offSetWidth = progressBar.offsetWidth;
+    };
+    
+    gameArea.newGame = function (){
+        gameArea.stopTimer();
+        
+        gameArea.setGameTiles(6, 6);
+    };  
+    
     gameArea.setUp();
-    gameArea.setGameTiles(6, 6);
+    gameArea.newGame();
     
 })();
