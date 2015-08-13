@@ -8,7 +8,6 @@ Util.direction = {
 };
 
 Util.arrayShuffle = function (array) {
-    
     var shuffled = [];
     var arraySize = array.length;
     var temp;

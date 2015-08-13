@@ -15,6 +15,14 @@
     var hint; // Array containing coordinate path
     var hintButton;
     
+    var timePowerButton;
+    
+    var timeLeft;
+    var maxTime;
+    var timer;
+    
+    var progressBar;
+    
     gameArea.setUp = function (){
         gameArea.createNewTiles();
         
@@ -26,6 +34,25 @@
                 
         $('#buttonContainer').append(hintButton);
         
+        timePowerButton = document.createElement('input');
+        timePowerButton.type = 'button';
+        timePowerButton.value = 'Time Power!';
+        timePowerButton.onclick = gameArea.activateTimePower;
+        timePowerButton.classList.add('timePowerButton');
+                
+        $('#buttonContainer').append(timePowerButton);
+        
+        
+        var progressBarContainer = document.createElement('div');
+        progressBarContainer.classList.add('progressBarContainer');
+        $('#buttonContainer').append(progressBarContainer);
+
+        progressBar = document.createElement('div');
+        progressBar.classList.add('progressBar');
+                
+        $(progressBarContainer).append(progressBar);
+        
+        maxTime = 150;
     };
     
     gameArea.createNewTiles = function () {        
@@ -80,11 +107,9 @@
         //Calculate hint when starting game
         hint = gameArea.checkForSolution();
         if(!hint){
-            console.log('No more solutions!');
-            if(Tile.tilesEmpty(tiles)){
-                gameArea.gameOver();
-            }
+            gameArea.shuffleGame();
         }
+        gameArea.startTimer();
     };
     
     gameArea.createTypeArray = function (numPairs) {
@@ -151,7 +176,9 @@
                         console.log('No more solutions!');
                         if(Tile.tilesEmpty(tiles)){
                             gameArea.gameOver();
-                        }           
+                        } else {
+                            gameArea.shuffleGame();
+                        }          
                     }
                 }
             }
@@ -292,6 +319,15 @@
         return null;
     };
     
+    gameArea.shuffleGame = function(){
+        Tile.shuffleGameTiles(tiles);
+        hint = gameArea.checkForSolution();
+        if(!hint){
+            gameArea.shuffleGame();
+        }
+        
+    };
+    
     gameArea.showHint = function(){
         if(hint){
             $.each(hint,function(index, value){
@@ -306,12 +342,29 @@
     };
     
     gameArea.gameOver = function(){
-        
+        clearInterval(timer);
         // Show score
         
         // Start new game
         gameArea.setGameTiles(6,6);
     }
+    
+    gameArea.activateTimePower = function(){
+        timeLeft = Math.min(timeLeft + 10, maxTime);
+    };
+    
+    gameArea.startTimer = function(){
+        timeLeft = maxTime;
+        timer = setInterval(function(){
+            timeLeft--;
+            //Update progress bar
+            progressBar.style.width = ((timeLeft / maxTime) * 100) + '%';
+            
+            if(timeLeft <= 0){
+                gameArea.gameOver();
+            }
+        },1000);
+    };
             
     gameArea.setUp();
     gameArea.setGameTiles(6, 6);

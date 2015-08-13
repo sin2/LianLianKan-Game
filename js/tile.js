@@ -59,3 +59,36 @@ Tile.tilesEmpty = function (tiles){
     }
     return true;
 };
+
+Tile.shuffleGameTiles = function (tiles){
+    var gameTiles = [];
+    var shuffled = [];
+    for(x = 0; x < tiles.length; x++){
+        for(y = 0; y < tiles.length; y++){
+            if(tiles[x][y].tileType != TileType.EMPTY){
+                gameTiles.push(tiles[x][y]);
+            }
+        }
+    }
+    
+    var copy = gameTiles.slice(0);
+    shuffled = Util.arrayShuffle(copy);
+    var shuffledTypes = Tile.typeArrayWithTileArray(shuffled);
+    
+    for(z = 0; z < gameTiles.length; z++){
+        var tile = gameTiles[z];
+        
+        tile.tileType = shuffledTypes[z][0];
+        tile.style.background = shuffledTypes[z][1];
+    }
+};
+
+// Given a 1d array of tile div's create array of corresponding types
+Tile.typeArrayWithTileArray = function (tiles){
+    var types = [];
+    for(i = 0; i < tiles.length; i++){
+        types.push([tiles[i].tileType, tiles[i].style.background]);
+    }
+    return types;
+};
+
