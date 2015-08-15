@@ -79,6 +79,13 @@ body {
     position: relative;
 }
 
+#description {
+    width:500px;
+    height:75px;
+    margin: 30px auto;
+    position: relative;
+}
+
 .tile{
     width: 10%;
     height: 10%;
